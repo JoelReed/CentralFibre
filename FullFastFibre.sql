@@ -1,11 +1,11 @@
 -- Select all our data
 
 SELECT *
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024] -- Calculate the annual TCV (after discounts have been applied) and compare both years
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024] -- Calculate the annual TCV (after discounts have been applied) and compare both years
  WITH yearly_tcv AS
   (SELECT YEAR,
           SUM(Post_Discount_TCV) AS total_tcv
-   FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+   FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
    GROUP BY YEAR)
 SELECT yearly_tcv.YEAR AS current_year,
                           yearly_tcv.total_tcv AS current_tcv,
@@ -27,7 +27,7 @@ ORDER BY yearly_tcv.YEAR DESC;
  WITH yearly_sales AS
 (SELECT YEAR,
         COUNT(Post_Discount_TCV) AS total_sales
- FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+ FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
  GROUP BY YEAR)
 SELECT yearly_sales.YEAR AS current_year,
                             yearly_sales.total_sales AS current_sales,
@@ -47,29 +47,29 @@ ORDER BY yearly_sales.YEAR DESC;
 
  -- Add a day of the week column
 
-ALTER TABLE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024] ADD sale_day_of_the_week NVARCHAR(20);
+ALTER TABLE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024] ADD sale_day_of_the_week NVARCHAR(20);
 
  -- Populate the column with days
 
-UPDATE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+UPDATE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 SET sale_day_of_the_week = DATENAME(WEEKDAY, Sale_Date);
 
  --Add Month of Year
 
-ALTER TABLE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024] ADD sale_month_of_year NVARCHAR(20);
+ALTER TABLE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024] ADD sale_month_of_year NVARCHAR(20);
 
  -- Populate
 
-UPDATE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+UPDATE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 SET sale_month_of_year = DATENAME(MONTH, Sale_Date);
 
  --Add Quarter
 
-ALTER TABLE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024] ADD sale_quarter_of_year NVARCHAR(20);
+ALTER TABLE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024] ADD sale_quarter_of_year NVARCHAR(20);
 
  --Populate
 
-UPDATE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+UPDATE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 SET sale_quarter_of_year = CASE
                                WHEN MONTH(Sale_Date) IN (1,
                                                          2,
@@ -92,7 +92,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS daily_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY YEAR,
          DATENAME(WEEKDAY, Sale_Date)
@@ -106,7 +106,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS monthly_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY YEAR,
          DATENAME(MONTH, Sale_Date)
@@ -120,7 +120,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS q_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2023
 GROUP BY YEAR,
          sale_quarter_of_year
@@ -134,7 +134,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS product_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY YEAR,
          Product
@@ -148,7 +148,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS product_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY YEAR,
          Account_Manager
@@ -162,7 +162,7 @@ SELECT Account_Manager,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS product_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2023
 GROUP BY YEAR,
          Account_Manager,
@@ -175,7 +175,7 @@ ORDER BY Product,
 (SELECT Account_Manager,
         YEAR,
         SUM(Post_Discount_TCV) AS total_sales
- FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+ FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
  WHERE YEAR IN (2023,
                 2024) -- Ensure only the relevant years are included
 
@@ -208,7 +208,7 @@ SELECT YEAR,
        COUNT(*) AS number_of_sales,
        SUM(Post_Discount_TCV) AS total_income,
        ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS product_count_percentage
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY YEAR,
          Contract_Length
@@ -219,7 +219,7 @@ ORDER BY YEAR,
 
 SELECT SUM(Marketing_Cost) AS total_spent,
        (SUM(Marketing_Cost) / 2000000) * 100 AS percentage_of_budget
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024;
 
  -- Marketing spend by activity
@@ -227,21 +227,21 @@ WHERE YEAR = 2024;
 SELECT Marketing_Channel,
        SUM(Marketing_Cost) AS total_spent,
        (SUM(Marketing_Cost) / 2000000) * 100 AS percentage_of_budget
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY Marketing_Channel
 ORDER BY total_spent DESC; -- Sorting from highest to lowest spend
 
  -- Add discount cost column
 
-ALTER TABLE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024] ADD discount_cost INT;
+ALTER TABLE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024] ADD discount_cost INT;
 
 
-UPDATE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+UPDATE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 SET discount_cost = Monthly_Cost * Discount_Months;
 
 
-ALTER TABLE [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+ALTER TABLE [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 ALTER COLUMN discount_cost MONEY;
 
  -- Marketing Spend, plus ROMI and Avg cost of acquisition - this uses the combined activity costs and discount costs
@@ -272,7 +272,7 @@ SELECT Marketing_Channel,
            WHEN SUM(Marketing_Cost) + SUM(discount_cost) = 0 THEN 'N/A'
            ELSE CONCAT(ROUND((SUM(Post_Discount_TCV) / (SUM(Marketing_Cost) + SUM(discount_cost))), 2), ':1')
        END AS romi_ratio -- ROMI Ratio using combined spend
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024
 GROUP BY Marketing_Channel
 ORDER BY total_revenue DESC;
@@ -289,12 +289,12 @@ SELECT SUM(Marketing_Cost) AS total_spent,
 
        ((SUM(Post_Discount_TCV) - (SUM(Marketing_Cost) + SUM(discount_cost))) / (SUM(Marketing_Cost) + SUM(discount_cost))) * 100 AS romi_percentage,
        CONCAT(ROUND(SUM(Post_Discount_TCV) / (SUM(Marketing_Cost) + SUM(discount_cost)), 2), ':1') AS romi_ratio
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE YEAR = 2024;
 
  -- Count discounts in 2024
 
 SELECT COUNT(discount_cost) AS total_discounts
-FROM [CentralFibre].[dbo].[CentralFibre-Broadband-Sales-2023-2024]
+FROM [FullFastFibre].[dbo].[FullFastFibre-Broadband-Sales-2023-2024]
 WHERE (YEAR = 2024)
 AND (discount_cost <> 0);
